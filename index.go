@@ -75,7 +75,25 @@ type BodySizeLimit struct {
 	MinBodySize uint `json:"max_body_size"`
 }
 
-func GetPolicyToken(alioss_config AliossConfig, body_size BodySizeLimit, params []ExtraCallbackArgc, callback_url string, dir string, expire int64) string {
+func LoadConfig() AliossConfig {
+	conf_json, err := ioutil.ReadFile("env.json")
+	if err != nil {
+		panic("读取配置文件失败")
+	}
+
+	var conf AliossConfig
+
+	if err = json.Unmarshal(conf_json, &conf); err != nil {
+		panic("解析配置文件失败")
+	}
+
+	return conf
+}
+
+func GetPolicyToken(body_size BodySizeLimit, params []ExtraCallbackArgc, callback_url string, dir string, expire int64) string {
+
+	alioss_config := LoadConfig()
+
 	now := time.Now().Unix()
 	expire_end := now + expire
 	var tokenExpire = get_gmt_iso8601(expire_end)
