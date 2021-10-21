@@ -90,7 +90,7 @@ func LoadConfig() AliossConfig {
 	return conf
 }
 
-func GetPolicyToken(body_size BodySizeLimit, params []ExtraCallbackArgc, callback_url string, dir string, expire int64) string {
+func GetPolicyToken(body_size BodySizeLimit, params []ExtraCallbackArgc, callback_url string, dir string, expire int64) PolicyToken {
 
 	alioss_config := LoadConfig()
 
@@ -152,9 +152,8 @@ func GetPolicyToken(body_size BodySizeLimit, params []ExtraCallbackArgc, callbac
 	policyToken.Key = dir
 	policyToken.Policy = string(debyte)
 	policyToken.Callback = string(callbackBase64)
-	response, _ := json.Marshal(policyToken)
 
-	return string(response)
+	return policyToken
 }
 
 func Callback(r *http.Request) (bool, error) {
